@@ -6,20 +6,29 @@ from PyQt5.QtCore import QObject
 
 class Project(QObject):
     CONFIG_FILENAME = "assets.json"
-    DEFAULT_DIRECTORIES = ("Images", "Properties")
+    DEFAULT_DIRECTORIES = (
+        "Images", "Properties", "Scenes", "Sounds")
 
-    def __init__(self, name, parentDir):
+    def __init__(self, name, rootDir):
         self.name = name
-        self.parentDir = parentDir
+        self.rootDir = rootDir
         self.config = None
 
     @property
     def path(self):
-        return os.path.join(self.parentDir, self.name)
+        return self.rootDir
+
+    @property
+    def configJSONPath(self):
+        return Project.getConfigJSONPath(self.rootDir)
 
     @classmethod
-    def new(cls, name, parentDir):
-        project = Project(name, parentDir)
+    def getConfigJSONPath(cls, rootDir):
+        return os.path.join(rootDir, cls.CONFIG_FILENAME)
+
+    @classmethod
+    def new(cls, name, rootDir):
+        project = Project(name, rootDir)
         project.initConfig()
         project.createRootDir()
         project.createConfigJSON()
@@ -31,8 +40,8 @@ class Project(QObject):
         config = cls.loadConfigJSON(configPath)
         if config is None:
             return None
-        parentDir = os.path.dirname(os.path.dirname(configPath))
-        project = Project(config['name'], parentDir)
+        rootDir = os.path.dirname(configPath)
+        project = Project(config['name'], rootDir)
         project.config = config
         return project
 
@@ -46,7 +55,7 @@ class Project(QObject):
     def initConfig(self):
         self.config = {
             'name': self.name,
-            # 'ignores': [],
+            #'ignores': [],
         }
 
     def createRootDir(self):

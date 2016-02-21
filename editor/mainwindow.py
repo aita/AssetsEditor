@@ -58,17 +58,18 @@ class MainWindow(QMainWindow):
         projectConfig = NewProjectDialog.getNewProjectConfig(self)
         if projectConfig is None:
             return
-        projectName, parentDir = projectConfig
-        if os.path.exists(os.path.join(parentDir, projectName)):
+        projectName, parentDir = projectConfig['name'], projectConfig['parentDir']
+        rootDir = os.path.join(parentDir, projectName)
+        if os.path.exists(Project.getConfigJSONPath(rootDir)):
             QMessageBox.warning(
                 self, "", "The project already exists.", QMessageBox.Ok)
             return
-        self.open(Project.new(projectName, parentDir))
+        self.open(Project.new(projectName, rootDir))
 
     def openProject(self):
         path, _ = QFileDialog.getOpenFileName(
             self, "", os.path.expanduser("~"),
-            "Assets files ({})".format(Project.CONFIG_FILENAME))
+            "Assets files ({filename})".format(filename=Project.CONFIG_FILENAME))
         if not path:
             return
         project = Project.open(path)

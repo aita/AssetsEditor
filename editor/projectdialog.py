@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-
+# -*- cod ing:utf-8 -*-
 import os
 
 from PyQt5.Qt import Qt
@@ -16,8 +16,8 @@ class NewProjectDialog(QDialog):
         layout.setSizeConstraint(QLayout.SetFixedSize);
 
         layout.addWidget(QLabel("Parent Directory"), 0, 0)
-        self.parentDirectoryEdit = QLineEdit(os.path.expanduser("~"), self)
-        layout.addWidget(self.parentDirectoryEdit, 0, 1)
+        self.parentDirEdit = QLineEdit(os.path.expanduser("~"), self)
+        layout.addWidget(self.parentDirEdit, 0, 1)
 
         layout.addWidget(QLabel("Project Name"), 1, 0)
         self.projectNameEdit = QLineEdit(self)
@@ -32,18 +32,18 @@ class NewProjectDialog(QDialog):
 
     def done(self, result):
         if QDialog.Accepted == result:
-            if self.parentDirectory == "" or self.projectName == "":
+            if self.parentDir == "" or self.projectName == "":
                 return
-            if not os.path.exists(self.parentDirectory):
+            if not os.path.exists(self.parentDir):
                 return
-            if not os.path.isdir(self.parentDirectory):
+            if not os.path.isdir(self.parentDir):
                 return
         super().done(result)
         return
 
     @property
-    def parentDirectory(self):
-        return self.parentDirectoryEdit.text()
+    def parentDir(self):
+        return self.parentDirEdit.text()
 
     @property
     def projectName(self):
@@ -55,4 +55,7 @@ class NewProjectDialog(QDialog):
         result = dialog.exec_()
         if result != QDialog.Accepted:
             return None
-        return dialog.projectName, dialog.parentDirectory
+        return {
+            'name': dialog.projectName,
+            'parentDir': dialog.parentDir,
+        }
