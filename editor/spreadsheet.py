@@ -9,9 +9,7 @@ class SpreadSheet(QWidget):
         super().__init__(parent)
 
         layout = QVBoxLayout()
-
-        rows = cols = 10
-        self.table = QTableWidget(rows, cols, self)
+        self.table = QTableWidget(0, 1, self)
         self.table.setSizeAdjustPolicy(QTableWidget.AdjustToContents)
         layout.addWidget(self.table)
 
