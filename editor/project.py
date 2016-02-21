@@ -6,7 +6,7 @@ from PyQt5.QtCore import QObject
 
 class Project(QObject):
     CONFIG_FILENAME = "assets.json"
-    DEFAULT_DIRECTORIES = ("Images", "Data")
+    DEFAULT_DIRECTORIES = ("Images", "Properties")
 
     def __init__(self, name, parentDir):
         self.name = name
@@ -20,17 +20,39 @@ class Project(QObject):
     @classmethod
     def new(cls, name, parentDir):
         project = Project(name, parentDir)
-        if not os.path.exists(project.path):
-            os.mkdir(project.path)
+        project.initConfig()
+        project.createRootDir()
         project.createConfigJSON()
         project.createDefaultDirectories()
         return project
+
+    @classmethod
+    def open(cls, configPath):
+        config = cls.loadConfigFile(configPath)
+        if config is None:
+            return None
+        parentDir = os.path.dirname(os.path.dirname(configPath))
+        project = Project(config['name'], parentDir)
+        project.config = config
+        return project
+
+    @classmethod
+    def loadConfigFile(self, path):
+        with open(path) as io:
+            config = json.load(io)
+        # TODO: Validate the config
+        return config
 
     def initConfig(self):
         self.config = {
             'name': self.name,
             # 'ignores': [],
         }
+
+    def createRootDir(self):
+        if os.path.exists(self.path):
+            return
+        os.mkdir(self.path)
 
     def createConfigJSON(self):
         jsonPath = os.path.join(self.path, self.CONFIG_FILENAME)

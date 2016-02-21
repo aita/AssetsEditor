@@ -4,7 +4,7 @@ from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import (
     QMainWindow, QDockWidget, QTabWidget,
     qApp, QAction,
-    QMessageBox,
+    QFileDialog, QMessageBox,
 )
 from PyQt5.QtGui import QIcon
 
@@ -31,6 +31,12 @@ class MainWindow(QMainWindow):
         newAction.triggered.connect(self.newProject)
         fileMenu.addAction(newAction)
 
+        openAction = QAction(QIcon('open.png'), '&Open Project', self)
+        openAction.setShortcut('Ctrl+O')
+        openAction.setStatusTip('Open Project')
+        openAction.triggered.connect(self.openProject)
+        fileMenu.addAction(openAction)
+
         exitAction = QAction(QIcon('exit.png'), '&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
@@ -54,10 +60,23 @@ class MainWindow(QMainWindow):
             return
         projectName, parentDir = projectConfig
         if os.path.exists(os.path.join(parentDir, projectName)):
-            QMessageBox.warning(self, "",
-                "The project already exists.", QMessageBox.Ok)
+            QMessageBox.warning(
+                self, "", "The project already exists.", QMessageBox.Ok)
             return
         self.open(Project.new(projectName, parentDir))
+
+    def openProject(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "", os.path.expanduser("~"),
+            "Assets files ({})".format(Project.CONFIG_FILENAME))
+        if not path:
+            return
+        project = Project.open(path)
+        if project is None:
+            QMessageBox.critical(
+                self, "", "Colud not open the project.", QMessageBox.Ok)
+            return
+        self.open(project)
 
     def open(self, project):
         self.project = project
