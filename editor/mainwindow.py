@@ -43,6 +43,7 @@ class MainWindow(QMainWindow):
 
         self.projectTree = ProjectTree()
         dockWidget = QDockWidget("Project", self)
+        dockWidget.setFeatures(QDockWidget.NoDockWidgetFeatures)
         dockWidget.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         dockWidget.setWidget(self.projectTree)
         self.addDockWidget(Qt.LeftDockWidgetArea, dockWidget)
@@ -51,9 +52,8 @@ class MainWindow(QMainWindow):
         projectConfig = NewProjectDialog.getNewProjectName(self)
         if projectConfig is None:
             return
-
-        projectName, parentDirectory = projectConfig
-        self.open(Project.new(projectName, parentDirectory))
+        projectName, parentDir = projectConfig
+        self.open(Project.new(projectName, parentDir))
 
     def open(self, project):
         self.project = project
