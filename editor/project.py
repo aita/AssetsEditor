@@ -28,7 +28,7 @@ class Project(QObject):
 
     @classmethod
     def open(cls, configPath):
-        config = cls.loadConfigFile(configPath)
+        config = cls.loadConfigJSON(configPath)
         if config is None:
             return None
         parentDir = os.path.dirname(os.path.dirname(configPath))
@@ -37,7 +37,7 @@ class Project(QObject):
         return project
 
     @classmethod
-    def loadConfigFile(self, path):
+    def loadConfigJSON(self, path):
         with open(path) as io:
             config = json.load(io)
         # TODO: Validate the config
