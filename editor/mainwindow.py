@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         if projectConfig is None:
             return
         projectName, parentDir = projectConfig
-        if os.path.exists(os.path.join(projectName, parentDir)):
+        if os.path.exists(os.path.join(parentDir, projectName)):
             QMessageBox.warning(self, "",
                 "The project already exists.", QMessageBox.Ok)
             return
