@@ -64,8 +64,7 @@ class Project(QObject):
         os.mkdir(self.path)
 
     def createConfigJSON(self):
-        jsonPath = os.path.join(self.path, self.CONFIG_FILENAME)
-        with open(jsonPath, "w") as io:
+        with open(self.configJSONPath, "w") as io:
             json.dump(self.config, io)
 
     def createDefaultDirectories(self):
