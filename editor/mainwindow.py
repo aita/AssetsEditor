@@ -53,8 +53,8 @@ class MainWindow(QMainWindow):
             return
 
         projectName, parentDirectory = projectConfig
-        project = Project(projectName, parentDirectory)
-        self.open(project)
+        self.open(Project.new(projectName, parentDirectory))
 
     def open(self, project):
-        pass
+        self.project = project
+        self.projectTree.load(self.project)
