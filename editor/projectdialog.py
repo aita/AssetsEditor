@@ -38,8 +38,6 @@ class NewProjectDialog(QDialog):
                 return
             if not os.path.isdir(self.parentDirectory):
                 return
-            # if os.path.exists(os.path.join(self.parentDirectory, self.projectName)):
-            #     return
         super().done(result)
         return
 
@@ -52,7 +50,7 @@ class NewProjectDialog(QDialog):
         return self.projectNameEdit.text()
 
     @classmethod
-    def getNewProjectName(cls, parent=None):
+    def getNewProjectConfig(cls, parent=None):
         dialog = cls(parent)
         result = dialog.exec_()
         if result != QDialog.Accepted:

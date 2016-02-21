@@ -1,8 +1,10 @@
 # -*- coding:utf-8 -*-
+import os
 from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import (
     QMainWindow, QDockWidget, QTabWidget,
-    qApp, QAction
+    qApp, QAction,
+    QMessageBox,
 )
 from PyQt5.QtGui import QIcon
 
@@ -15,9 +17,7 @@ from .spreadsheet import SpreadSheet
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.project = None
-
         self.initMenu()
         self.initWidgets()
 
@@ -49,10 +49,14 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, dockWidget)
 
     def newProject(self):
-        projectConfig = NewProjectDialog.getNewProjectName(self)
+        projectConfig = NewProjectDialog.getNewProjectConfig(self)
         if projectConfig is None:
             return
         projectName, parentDir = projectConfig
+        if os.path.exists(os.path.join(projectName, parentDir)):
+            QMessageBox.warning(self, "",
+                "The project already exists.", QMessageBox.Ok)
+            return
         self.open(Project.new(projectName, parentDir))
 
     def open(self, project):
