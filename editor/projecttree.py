@@ -20,6 +20,6 @@ class ProjectTree(QTreeWidget):
         name = os.path.basename(path)
         item = QTreeWidgetItem(parent, [name])
         if os.path.isdir(path):
-            for name in os.listdir(path):
+            for name in sorted(os.listdir(path)):
                 self.addChildren(item, os.path.join(path, name))
         return item
