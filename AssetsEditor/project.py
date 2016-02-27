@@ -7,7 +7,12 @@ from PyQt5.QtCore import QObject
 class Project(QObject):
     CONFIG_FILENAME = "assets.json"
     DEFAULT_DIRECTORIES = (
-        "Images", "Properties", "Scenes", "Sounds",
+        "Images",
+        "Properties",
+        "Scenes",
+        "Sounds",
+        "Shaders",
+        "Textures",
     )
 
     def __init__(self, name, rootDir):
@@ -56,7 +61,7 @@ class Project(QObject):
     def initConfig(self):
         self.config = {
             'name': self.name,
-            #'ignores': [],
+            # 'ignores': [],
         }
 
     def createConfigJSON(self):

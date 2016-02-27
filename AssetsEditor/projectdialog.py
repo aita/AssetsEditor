@@ -15,13 +15,14 @@ class NewProjectDialog(QDialog):
         layout = QGridLayout(self)
         layout.setSizeConstraint(QLayout.SetFixedSize);
 
-        layout.addWidget(QLabel("Parent Directory"), 0, 0)
-        self.parentDirEdit = QLineEdit(os.path.expanduser("~"), self)
-        layout.addWidget(self.parentDirEdit, 0, 1)
-
-        layout.addWidget(QLabel("Project Name"), 1, 0)
+        layout.addWidget(QLabel("Project Name"), 0, 0)
         self.projectNameEdit = QLineEdit(self)
-        layout.addWidget(self.projectNameEdit, 1, 1)
+        layout.addWidget(self.projectNameEdit, 0, 1)
+
+        layout.addWidget(QLabel("Project Location"), 1, 0)
+        self.parentDirEdit = QLineEdit(os.path.expanduser("~"), self)
+        layout.addWidget(self.parentDirEdit, 1, 1)
+
 
         buttons = QDialogButtonBox(
             QDialogButtonBox.Ok | QDialogButtonBox.Cancel,

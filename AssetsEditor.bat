@@ -1,4 +1,4 @@
 @echo off
 set PYTHON=C:\Python34\python.exe
 
-%PYTHON% -m editor
+%PYTHON% -m AssetsEditor

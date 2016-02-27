@@ -1,12 +1,17 @@
 # -*- coding:utf-8 -*-
 import os
 from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import (
-    QMainWindow, QDockWidget, QTabWidget,
-    qApp, QAction,
-    QFileDialog, QMessageBox,
-)
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (
+    qApp,
+    QAction,
+    QMainWindow,
+    QDockWidget,
+    QTabWidget,
+    QTextEdit,
+    QFileDialog,
+    QMessageBox,
+)
 
 from .project import Project
 from .projectdialog import NewProjectDialog
@@ -15,9 +20,11 @@ from .spreadsheet import SpreadSheet
 
 
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
         self.project = None
+
         self.initMenu()
         self.initWidgets()
 
@@ -54,6 +61,8 @@ class MainWindow(QMainWindow):
         dockWidget.setWidget(self.projectTree)
         self.addDockWidget(Qt.LeftDockWidgetArea, dockWidget)
 
+        self.projectTree.fileOpen.connect(self.openFile)
+
     def newProject(self):
         projectConfig = NewProjectDialog.getNewProjectConfig(self)
         if projectConfig is None:
@@ -64,7 +73,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(
                 self, "", "The project already exists.", QMessageBox.Ok)
             return
-        self.open(Project.new(projectName, rootDir))
+        self._openProject(Project.new(projectName, rootDir))
 
     def openProject(self):
         path, _ = QFileDialog.getOpenFileName(
@@ -77,8 +86,25 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(
                 self, "", "Colud not open the project.", QMessageBox.Ok)
             return
-        self.open(project)
+        self._openProject(project)
 
-    def open(self, project):
+    def _openProject(self, project):
         self.project = project
         self.projectTree.load(self.project)
+
+    def openFile(self, filePath):
+        _, ext = os.path.splitext(filePath)
+        if ext in ('.txt', '.json'):
+            self.openTextFile(filePath)
+        if ext in ('.png', '.jpeg', '.bmp'):
+            self.openImageFile(filePath)
+
+    def openTextFile(self, filePath):
+        with open(filePath) as fp:
+            text = fp.read()
+        textEdit = QTextEdit(text)
+        textEdit.setReadOnly(True)
+        self.tabWidget.addTab(textEdit, os.path.basename(filePath))
+
+    def openImageFile(self, filePath):
+        pass
